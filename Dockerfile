@@ -1,5 +1,9 @@
-FROM quay.io/lyfe00011/md:beta
-RUN git clone https://github.com/lyfe00011/levanter.git /root/LyFE/
-WORKDIR /root/LyFE/
-RUN yarn install
+FROM node:22-bookworm-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg python3 make g++ && rm -rf /var/lib/apt/lists/*
+COPY package*.json ./
+RUN npm install --omit=dev
+COPY . .
+ENV NODE_ENV=production
+EXPOSE 10000
 CMD ["npm", "start"]
